@@ -1,40 +1,17 @@
 import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 
-const input = $('#input')
-const button = $('#button')
-const coords = $('#coords')
+var nums = [33,45,12,88,15,98,20,23,58]
+var nums$ = Rx.Observable.from(nums)
 
-const btnStream$ = Rx.Observable.fromEvent(button, 'click')
-btnStream$.subscribe(
+nums$.subscribe(
   x => {
-    console.log('Button was clicked!')
     console.log(x)
   },
   err => {
     console.log(err)
   },
   complete => {
-    console.log('Completed!')
-  }
-)
-
-const inputStream$ = Rx.Observable.fromEvent(input, 'keyup')
-inputStream$.subscribe(
-  x => {
-    console.log(x.target.value)
-  },
-  err => {
-    console.log(err)
-  },
-  complete => {
-    console.log('Completed!')
-  }
-)
-
-const coordsStream$ = Rx.Observable.fromEvent(document, 'mousemove')
-coordsStream$.subscribe(
-  x => {
-    coords.html('X:' + x.clientX + ' Y:' + x.clientY)
+    console.log('Completed')
   }
 )

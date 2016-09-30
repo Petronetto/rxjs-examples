@@ -3,32 +3,30 @@ import Rx from 'rxjs/Rx'
 import { getSubscriber } from './utils/getSubscriber'
 
 let input = $('#input')
-let profile = $('#profile')
-profile.hide()
+let length = $('#length')
 
+// Map
+Rx.Observable.interval(1000)
+  .take(10)
+  .map(v => v * 2)
+  .subscribe(getSubscriber('Map'))
+
+// MapTo
+Rx.Observable.interval(1000)
+  .take(10)
+  .mapTo(Date.now())
+  .subscribe(getSubscriber('MapTo'))
+
+// Punck
 Rx.Observable.fromEvent(input, 'keyup')
-  .subscribe(e => {
-    profile.show()
-    Rx.Observable.fromPromise(getGithubUser(e.target.value))
-      .subscribe(user => {
-        $('#name').text(user.data.name)
-        $('#login').text(user.data.login)
-        $('#blog').text(user.data.blog)
-        $('#avatar').attr('src', user.data.avatar_url)
-        $('#repos').text(user.data.public_repos)
-        $('#followers').text(user.data.followers)
-        $('#following').text(user.data.following)
-        $('#link').attr('href', user.data.html_url)
-      })
+  //.map(e => e.target.value)
+  .pluck('target', 'value') // Mesmo que o map da linha anterior
+  .map(v => {
+    return {
+      value: v,
+      length: v.length
+    }
   })
-
-function getGithubUser(username) {
-  let api = 'https://api.github.com/users/' + username
-  let clientId = 'cf7ca1f7e09474c4a1fa'
-  let clientSecret = '57fd3140acec74dc09efe5a9f03145007aa70383'
-
-  return $.ajax({
-    url: `${api}?client_id=${clientId}&client_secret=${clientSecret}`,
-    dataType: 'jsonp'
-  }).promise()
-}
+  .subscribe(x => {
+    length.text(x.length)
+  })

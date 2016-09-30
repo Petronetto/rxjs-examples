@@ -2,29 +2,70 @@ import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 import { getSubscriber } from './utils/getSubscriber'
 
-let input = $('#input')
-let length = $('#length')
+const source$ = new Rx.Observable(observer => {
+  observer.next('Some value')
+  observer.next('Another different value')
+  observer.next('Hello')
+  observer.next('World')
+  observer.complete()
+})
 
-// Buffer
+const single$ = new Rx.Observable(observer => {
+  observer.next('Single value...')
+  observer.complete()
+})
+
+// Single - Retorna undefined se Observable retornar multiplos valores
+single$
+  .single()
+  .subscribe(getSubscriber('Single'))
+
+// First
+source$
+  .first()
+  .subscribe(getSubscriber('First'))
+
+// Last
+source$
+  .last()
+  .subscribe(getSubscriber('Last'))
+
+// Find - retorna undefined caso não encontre o valor
+source$
+  .find((value, index, obs) => {
+    return value === 'Hello'
+  })
+  .subscribe(getSubscriber('Find'))
+
+// FindIndex - retorna -1 caso não encontre o valor
+source$
+  .findIndex((value, index, obs) => {
+    return value === 'Hello'
+  })
+  .subscribe(getSubscriber('FindIndex'))
+
+// Take
+source$
+  .take(2)
+  .subscribe(getSubscriber('Take'))
+
+// TakeWhile
+source$
+  .takeWhile(i => i.length >= 6)
+  .subscribe(getSubscriber('TakeWhile'))
+
+// Skip
+source$
+  .skip(2)
+  .subscribe(getSubscriber('Skip'))
+
+// SkipWhile
+source$
+  .skipWhile(i => i.length >= 6)
+  .subscribe(getSubscriber('SkipWhile'))
+
+// TakeUntil e SkipUntil
 Rx.Observable.interval(500)
-  .take(10) // Limitar apenas 10 interações
-  .buffer(Rx.Observable.interval(1000))
-  .subscribe(getSubscriber('Buffer'))
-
-// BufferCount
-Rx.Observable.range(1, 100)
-  .bufferCount(20)
-  .subscribe(getSubscriber('BufferCount'))
-
-// BufferTime
-Rx.Observable.interval(1000)
-  .take(10) // Limitar apenas 10 interações
-  .bufferTime(2000)
-  .subscribe(getSubscriber('BufferTime'))
-
-// Exempplo de buffer com evento de click
-const obs1$ = Rx.Observable.interval(100)
-const obs2$ = Rx.Observable.fromEvent(document, 'click')
-
-const myBuffer = obs1$.buffer(obs2$)
-const subscriber = myBuffer.subscribe(getSubscriber('Buffer values'))
+  .takeUntil(Rx.Observable.timer(4000))
+  .skipUntil(Rx.Observable.timer(2000))
+  .subscribe(getSubscriber('TakeUntil e SkipUntil'))

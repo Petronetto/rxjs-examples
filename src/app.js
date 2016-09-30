@@ -2,20 +2,20 @@ import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 import { getSubscriber } from './utils/getSubscriber'
 
-const source$ = new Rx.Observable(observer => {
-  console.log('Creating a new observable')
-
-  observer.next('Value One...')
-
-  observer.next('Value Two...')
-
-  observer.error(new Error('Error: Something is wrong'))
-  
-  setTimeout(() => {
-    observer.next('Value Three...')
-    observer.complete()
-  }, 3000)
-
+// Cold Observer
+const cold$ = new Rx.Observable(observer => {
+  observer.next(Date.now())
 })
 
-source$.subscribe(getSubscriber('MyObs'))
+cold$.subscribe(getSubscriber('Cold One'))
+cold$.subscribe(getSubscriber('Cold Two'))
+
+// Hot Observer
+const hot$ = new Rx.Observable(observer => {
+  observer.next(Date.now())
+}).publish()
+
+hot$.subscribe(getSubscriber('Hot One'))
+hot$.subscribe(getSubscriber('Hot Two'))
+
+hot$.connect()

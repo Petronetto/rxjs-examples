@@ -4,7 +4,7 @@ export function getSubscriber(id) {
       console.log(`${id}-> ${x}`)
     },
     error(err) {
-      console.log(`${id}-> ${err}`)
+      console.log(`${id}-> ${err.stack}`)
     },
     complete(err) {
       console.log(`${id}-> Completed!`)

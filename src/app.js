@@ -5,28 +5,26 @@ import { getSubscriber } from './utils/getSubscriber'
 let input = $('#input')
 let length = $('#length')
 
-// Map
-Rx.Observable.interval(1000)
-  .take(10)
-  .map(v => v * 2)
-  .subscribe(getSubscriber('Map'))
+// Buffer
+Rx.Observable.interval(500)
+  .take(10) // Limitar apenas 10 interações
+  .buffer(Rx.Observable.interval(1000))
+  .subscribe(getSubscriber('Buffer'))
 
-// MapTo
-Rx.Observable.interval(1000)
-  .take(10)
-  .mapTo(Date.now())
-  .subscribe(getSubscriber('MapTo'))
+// BufferCount
+Rx.Observable.range(1, 100)
+  .bufferCount(20)
+  .subscribe(getSubscriber('BufferCount'))
 
-// Punck
-Rx.Observable.fromEvent(input, 'keyup')
-  //.map(e => e.target.value)
-  .pluck('target', 'value') // Mesmo que o map da linha anterior
-  .map(v => {
-    return {
-      value: v,
-      length: v.length
-    }
-  })
-  .subscribe(x => {
-    length.text(x.length)
-  })
+// BufferTime
+Rx.Observable.interval(1000)
+  .take(10) // Limitar apenas 10 interações
+  .bufferTime(2000)
+  .subscribe(getSubscriber('BufferTime'))
+
+// Exempplo de buffer com evento de click
+const obs1$ = Rx.Observable.interval(100)
+const obs2$ = Rx.Observable.fromEvent(document, 'click')
+
+const myBuffer = obs1$.buffer(obs2$)
+const subscriber = myBuffer.subscribe(getSubscriber('Buffer values'))

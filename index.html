@@ -3,13 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name='viewport' content="width=device-width">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <title>RxJS</title> 
 </head>
 <body>
-  <input type="text" id="input">
-  <button id="button">Click</button>
+  <h1>RxJs SandBox</h1>
 
-  <h1 id="coords"></h1>
+  <div class="container">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <input type="text" class="form-control" id="input" planceholder="Search user">
+      </div>
+    </div>
+
+    <div id="profile">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title" id="name"></h3>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-4">
+            <img class="img-thumbnail" id="avatar">
+          </div>
+          <div class="col-md-8">
+            <span class="label label-primary">
+              Public Repos: <span id="repos"></span>
+            </span>
+            <span class="label label-success">
+              Followers: <span id="followers"></span>
+            </span>
+            <span class="label label-info">
+              Following: <span id="following"></span>
+            </span>
+            <br><br>
+            <ul class="list-group">
+              <li class="list-group-item">
+                Login: <span id="login"></span>
+              </li>
+              <li class="list-group-item">
+                Blog URL: <span id="blog"></span>
+              </li>
+            </ul>
+            <br><br>
+            <a class="btn btn-primary btn-lg" target="_blank" id="link">
+              View Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <!--Scripts-->
   <script src="./dist/app.bundle.js"></script>
 </body>

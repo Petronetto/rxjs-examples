@@ -2,19 +2,33 @@ import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 import { getSubscriber } from './utils/getSubscriber'
 
-const myPromise = new Promise((resolve, reject) => {
-  console.log('Creating Promise...')
-  setTimeout(() => {
-    console.log('Do something...')
-    resolve('Resolved!')
-  }, 2000)
-})
+let input = $('#input')
+let profile = $('#profile')
+profile.hide()
 
-// Usando Promises
-// myPromise.then(data => {
-//   console.log(data)
-// })
+Rx.Observable.fromEvent(input, 'keyup')
+  .subscribe(e => {
+    profile.show()
+    Rx.Observable.fromPromise(getGithubUser(e.target.value))
+      .subscribe(user => {
+        $('#name').text(user.data.name)
+        $('#login').text(user.data.login)
+        $('#blog').text(user.data.blog)
+        $('#avatar').attr('src', user.data.avatar_url)
+        $('#repos').text(user.data.public_repos)
+        $('#followers').text(user.data.followers)
+        $('#following').text(user.data.following)
+        $('#link').attr('href', user.data.html_url)
+      })
+  })
 
-// Usando Observables
-Rx.Observable.fromPromise(myPromise)
-  .subscribe(getSubscriber('Promise'))
+function getGithubUser(username) {
+  let api = 'https://api.github.com/users/' + username
+  let clientId = 'cf7ca1f7e09474c4a1fa'
+  let clientSecret = '57fd3140acec74dc09efe5a9f03145007aa70383'
+
+  return $.ajax({
+    url: `${api}?client_id=${clientId}&client_secret=${clientSecret}`,
+    dataType: 'jsonp'
+  }).promise()
+}

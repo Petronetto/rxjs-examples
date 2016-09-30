@@ -2,20 +2,24 @@ import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 import { getSubscriber } from './utils/getSubscriber'
 
-// Cold Observer
-const cold$ = new Rx.Observable(observer => {
-  observer.next(Date.now())
-})
 
-cold$.subscribe(getSubscriber('Cold One'))
-cold$.subscribe(getSubscriber('Cold Two'))
+// const source$ = new Rx.Observable.interval(1000).publish()
 
-// Hot Observer
-const hot$ = new Rx.Observable(observer => {
-  observer.next(Date.now())
-}).publish()
+// source$.connect()
 
-hot$.subscribe(getSubscriber('Hot One'))
-hot$.subscribe(getSubscriber('Hot Two'))
+// setTimeout(() => {
+//   source$.subscribe(getSubscriber('####'))
+//   setTimeout(() => {
+//     source$.subscribe(getSubscriber('>>>>'))
+//   }, 4000)
+// }, 2000)
 
-hot$.connect()
+
+const source$ = new Rx.Observable.interval(1000).publish().refCount()
+
+setTimeout(() => {
+  source$.subscribe(getSubscriber('####'))
+  setTimeout(() => {
+    source$.subscribe(getSubscriber('>>>>'))
+  }, 4000)
+}, 2000)

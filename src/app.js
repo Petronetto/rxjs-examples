@@ -69,3 +69,10 @@ Rx.Observable.interval(500)
   .takeUntil(Rx.Observable.timer(4000))
   .skipUntil(Rx.Observable.timer(2000))
   .subscribe(getSubscriber('TakeUntil e SkipUntil'))
+
+// Filter
+Rx.Observable.range(0, 10)
+  .filter((x, i, obs) => {
+    return x % 2 === 0
+  })
+  .subscribe(getSubscriber('Filter'))

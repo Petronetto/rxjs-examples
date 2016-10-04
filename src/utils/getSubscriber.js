@@ -8,6 +8,7 @@ export function getSubscriber(id) {
     },
     complete(err) {
       console.log(`${id}-> Completed!`)
+      console.log("\n")
     }
   }
 }

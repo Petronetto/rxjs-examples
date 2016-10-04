@@ -7,6 +7,7 @@ let profile = $('#profile')
 profile.hide()
 
 Rx.Observable.fromEvent(input, 'keyup')
+  .distinct()
   .debounceTime(1000)
   .subscribe(e => {
     profile.show()

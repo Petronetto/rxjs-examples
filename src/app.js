@@ -6,6 +6,7 @@ let input = $('#input')
 let profile = $('#profile')
 profile.hide()
 
+/**
 Rx.Observable.fromEvent(input, 'keyup')
   .distinct()
   .debounceTime(1000)
@@ -22,6 +23,28 @@ Rx.Observable.fromEvent(input, 'keyup')
         $('#following').text(user.data.following)
         $('#link').attr('href', user.data.html_url)
       })
+  })
+*/
+
+// Usando swithMap
+Rx.Observable.fromEvent(input, 'keyup')
+  .distinct()
+  .debounceTime(1000)
+  .map(e => e.target.value)
+  .switchMap((v) => {
+    console.log(v)
+    profile.show()
+    return Rx.Observable.fromPromise(getGithubUser(v))
+  })
+  .subscribe(user => {
+    $('#name').text(user.data.name)
+    $('#login').text(user.data.login)
+    $('#blog').text(user.data.blog)
+    $('#avatar').attr('src', user.data.avatar_url)
+    $('#repos').text(user.data.public_repos)
+    $('#followers').text(user.data.followers)
+    $('#following').text(user.data.following)
+    $('#link').attr('href', user.data.html_url)
   })
 
 function getGithubUser(username) {

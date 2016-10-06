@@ -32,7 +32,6 @@ Rx.Observable.fromEvent(input, 'keyup')
   .debounceTime(1000)
   .map(e => e.target.value)
   .switchMap((v) => {
-    console.log(v)
     profile.show()
     return Rx.Observable.fromPromise(getGithubUser(v))
   })

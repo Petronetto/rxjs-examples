@@ -15,6 +15,10 @@ const single$ = new Rx.Observable(observer => {
   observer.complete()
 })
 
+// Lançando uma exceção
+const error$ = Rx.Observable.throw(new Error('Something went wrong!'))
+//error$.subscribe(x => console.log(x))
+
 // Single - Retorna undefined se Observable retornar multiplos valores
 single$
   .single()

@@ -86,3 +86,52 @@ Rx.Observable.of(11,11,20,20,53,21,11,35,98,45,33,33)
 Rx.Observable.of(11,11,11,11,20,20,53,22,11,11,11,11,11,35,98,45,33,33)
   .distinctUntilChanged()
   .subscribe(getSubscriber('DistinctUntilChanged'))
+
+// DefaultIfEmpty
+Rx.Observable.of()
+  .defaultIfEmpty('MY_DEFAULT_VALUE')
+  .subscribe(getSubscriber('DefaultIfEmpty'))
+
+// Every - Retorna true se todos os elementos atenderem à condição, caso contrário retorna falso
+Rx.Observable.of(2,4,6)
+  .every(v => v % 2 === 0)
+  .subscribe(getSubscriber('Every'))
+
+// Do
+Rx.Observable.of(1,2,3,4,5,6)
+  .do(v => console.log('Do-> Before Map: ' + v))
+  .map(v => v * 100)
+  .do(v => console.log('Do-> After Map: ' + v))
+  .subscribe(getSubscriber('Do'))
+
+// Merge e Delay
+const merge$ = Rx.Observable.of(null)
+Rx.Observable.merge(
+  merge$.mapTo('First').delay(11000),
+  merge$.mapTo('Second').delay(6000),
+  merge$.mapTo('Third').delay(7000),
+  merge$.mapTo('Fourth').delay(10000)
+).subscribe(getSubscriber('Merge/Delay'))
+
+// DelayWhen
+const delay$ = Rx.Observable.interval(1000)
+delay$
+  .take(5)
+  .delayWhen(() => Rx.Observable.timer(11000))
+  .subscribe(getSubscriber('DelayWhen'))
+
+// Let
+const letSource$ = Rx.Observable.from([1,2,3,4,5])
+letSource$
+  .let(obs => obs.map(v => v * 2))
+  .subscribe(getSubscriber('Let'))
+
+// ToPromise
+const myFunc$ = (v) => {
+  return Rx.Observable.of(v).delay(1000)
+}
+myFunc$('Hello Rx')
+  .toPromise()
+  .then((result) => {
+    console.log('From Promise: ' + result + "\n")
+  })
